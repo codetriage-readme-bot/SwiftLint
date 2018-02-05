@@ -64,7 +64,7 @@ public struct EmptyEnumArgumentsRule: ASTRule, ConfigurationProviderRule, Correc
 
         let contents = file.contents.bridge()
 
-        let callsRanges = dictionary.substructure.flatMap { dict -> NSRange? in
+        let callsRanges = dictionary.substructure.compactMap { dict -> NSRange? in
             guard dict.kind.flatMap(SwiftExpressionKind.init(rawValue:)) == .call,
                 let offset = dict.offset,
                 let length = dict.length,
@@ -83,7 +83,7 @@ public struct EmptyEnumArgumentsRule: ASTRule, ConfigurationProviderRule, Correc
                     return []
             }
 
-            return file.match(pattern: "\\([,\\s_]*\\)", range: caseRange).flatMap { range, kinds in
+            return file.match(pattern: "\\([,\\s_]*\\)", range: caseRange).compactMap { range, kinds in
                 guard Set(kinds).isSubset(of: [.keyword]),
                     case let byteRange = NSRange(location: offset, length: length),
                     Set(file.syntaxMap.kinds(inByteRange: byteRange)) != [.keyword] else {

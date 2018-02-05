@@ -25,7 +25,7 @@ extension FileManager: LintableFileManager {
             return [absolutePath]
         }
 
-        return enumerator(atPath: absolutePath)?.flatMap { element -> String? in
+        return enumerator(atPath: absolutePath)?.compactMap { element -> String? in
             if let element = element as? String, element.bridge().isSwiftFile() {
                 return absolutePath.bridge().appendingPathComponent(element)
             }
